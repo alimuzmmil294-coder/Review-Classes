@@ -1,60 +1,53 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaDeleteLeft } from "react-icons/fa6";
+import { listItems } from "../constants/links";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 const Header = () => {
-  const [data, setData] = useState({
-    username: "",
-  });
-
-  const handleInput = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div>
-      <form
-        className="flex flex-col justify-center items-center border w-fit m-1"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (data.username == "") {
-            return alert("The field is empty...");
-          } else {
-            console.log(data);
-          }
-
-          setData({
-            username: "",
-          });
-        }}
+      <header
+        className={`${isOpen ? "flex flex-col justify-around" : "hidden"} fixed z-20 items-center text-[14px] right-0 left-0  gap-3 w-[25%] h-screen list-none p-10 border bg-blue-900  text-white `}
       >
-        <label htmlFor="userName">User Name</label>
-        <input
-          className={`${data.username.length > 10 ? "text-blue-600 border" : "text-black border-b"} outline-none m-10 p-10 rounded-2xl`}
-          onChange={handleInput}
-          type="text"
-          name="username"
-          id=""
-          value={data.username}
+        {listItems.map((item) => (
+          <li
+            onClick={() => setIsOpen(false)}
+            className="border p-2 rounded-md hover:bg-white hover:text-blue-900 hover:underline  text-[18px] transition-all duration-150 flex"
+            key={item.id}
+          >
+            <NavLink to={item.path}>{item.name}</NavLink>
+          </li>
+        ))}
+      </header>
+      <header className="flex list-none justify-between p-10 border bg-blue-900  text-white ">
+        <GiHamburgerMenu
+          onClick={() => setIsOpen(true)}
+          className="text-2xl md:hidden lg:hidden"
         />
-        <button type="submit">submit</button>
-      </form>
-      <h1 className="h-[10vh] flex justify-center items-center border m-1">
-        This is the Header
-      </h1>
-      <NavLink
-        to={"/"}
-        className="px-2 border my-2 w-[80%] m-auto rounded-2xl h-10 flex justify-center items-center underline text-2xl font-mono "
-      >
-        Hello World!
-      </NavLink>
-
-      <NavLink
-        className={"flex gap-3 items-center border w-fit p-3 rounded-2xl m-2"}
-        to={"/header"}
-      >
-        Header <FaDeleteLeft />
-      </NavLink>
+        {listItems.map((item) => (
+          <ul key={item.id}>
+            <li className="border p-2 rounded-md hover:bg-white hover:text-blue-900 hover:underline  text-[18px] transition-all duration-150 hidden lg:flex md:flex">
+              <NavLink to={item.path}>{item.name}</NavLink>
+            </li>
+          </ul>
+        ))}
+        <NavLink
+          key={7}
+          className={
+            "border p-2 rounded-md hover:bg-white hover:text-blue-900 hover:underline  text-[18px] transition-all duration-150 "
+          }
+          to={"/contact"}
+        >
+          Contact
+        </NavLink>
+      </header>
+      <div
+        onClick={() => setIsOpen(false)}
+        className={`${isOpen ? "fixed left-0 right-0 top-0 bottom-0 opacity-60" : "hidden"} w-full h-[100vh]   bg-gray-400`}
+      ></div>
     </div>
   );
 };
